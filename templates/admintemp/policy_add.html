@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Policy Upload</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+        
+        .sidebar {
+            background-color: rgb(13, 3, 54);
+            font-size: 20px;
+            color: white;
+            width: 250px;
+            height: 100vh;
+        }
+
+        .sidebar ul {
+            padding: 0;
+            margin: 0;
+            list-style-type: none;
+        }
+
+        .sidebar li {
+            padding: 10px;
+        }
+
+        .sidebar a {
+            text-decoration: none;
+            color: white;
+        }
+
+        .sidebar li:hover {
+            background-color: rgb(145, 195, 105);
+            color: rgb(255, 162, 0);
+        }
+        
+        .main {
+            width: 600px;
+            padding: 20px;
+            border-radius: 10px;
+            margin-left: 280px;
+            margin-top: 40px;
+            background-color: rgb(232, 206, 172);
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .container {
+            display: flex;
+        }
+
+        form {
+            text-align: left;
+        }
+
+        label {
+            font-weight: bold;
+            margin-top: 10px;
+            display: inline-block;
+        }
+
+        input[type="text"], textarea, select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 6px;
+            margin-bottom: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        input[type="submit"], .button-draft {
+            padding: 10px 20px;
+            border: none;
+            background-color: rgb(145, 195, 105);
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover, .button-draft:hover {
+            background-color: rgb(115, 165, 85);
+        }
+
+        .button-draft {
+            background-color: gray;
+            margin-left: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <ul>
+                <li><a href="/Home">Home</a></li>
+                <li><a href="/Policy_List">Policies</a></li>
+                <li><a href="/Complaint">Complaints</a></li>
+                <li><a href="/Feedback">Feedbacks</a></li>
+            </ul>
+        </div>
+        <div class="main">
+            <h1>Upload Policy</h1>
+            <form action="#" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="policyTitle">Policy Title</label>
+                    <input type="text" id="policyTitle" name="PolicyTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="policyCategory">Category</label>
+                    <select id="policyCategory" name="Category">
+                        <option value="general">General</option>
+                        <option value="merchant">Merchant</option>
+                        <option value="farmer">Farmer</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="policyDetails">Details</label>
+                    <textarea id="policyDetails" name="Details" cols="30" rows="6" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="policyFile">Attach File (Optional)</label>
+                    <input type="file" id="policyFile" name="policyfile">
+                </div>
+
+                <input type="submit" value="Publish Policy">
+                <button type="submit" class="button-draft" name="saveDraft">Save as Draft</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

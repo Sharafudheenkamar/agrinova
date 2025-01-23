@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notification Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        body {
+            background-color: #f4f4f4;
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            background-color:rgba(13, 3, 54, 0.9);
+            color: white;
+            width: 250px;
+            height: 100vh;
+            position: fixed;
+            left: -260px;
+            transition: all 0.3s ease;
+            padding-top: 20px;
+            z-index: 100;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .sidebar ul {
+            padding-top: 50px;
+            list-style: none;
+        }
+
+        .sidebar li {
+            padding: 15px 20px;
+            border-bottom: 1px solid #34495E;
+        }
+
+        .sidebar li:last-child {
+            border-bottom: none;
+        }
+
+        .sidebar a {
+            text-decoration: none;
+            color: white;
+            display: block;
+        }
+
+        .sidebar li:hover {
+            color: #0d3354;
+            background-color: #31ee41;
+        }
+
+        /* Toggle Button Styling */
+        .toggle-button {
+            background-color:rgba(13, 3, 54, 0.9);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            cursor: pointer;
+            font-size: 18px;
+            border-radius: 5px;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 101;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .toggle-button:hover {
+            background-color: #31ee41;
+        }
+
+        /* Main Content Area */
+        .content {
+            margin-left: 260px;
+            padding: 30px;
+            background-color: #F7F7F7;
+            min-height: 100vh;
+            transition: margin-left 0.3s ease;
+        }
+
+        .content.collapsed {
+            margin-left: 0;
+        }
+
+        .heading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #FFFFFF;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .heading h1 {
+            margin: 0;
+            font-size: 24px;
+            color: #2C3E50;
+        }
+
+        .export-button {
+            padding: 10px 20px;
+            background-color: #1ABC9C;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .export-button:hover {
+            background-color: #16A085;
+        }
+
+        /* Complaint Cards */
+        .complaint-card {
+            background-color: #FFFFFF;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .complaint-card h3 {
+            margin-bottom: 10px;
+            font-size: 18px;
+            color: #2C3E50;
+        }
+
+        .complaint-card p {
+            color: #555;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .complaint-card .status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+        .complaint-card .status.pending {
+            background-color: #F39C12;
+            color: white;
+        }
+
+        .complaint-card .status.resolved {
+            background-color: #27AE60;
+            color: white;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+                left: -220px;
+            }
+
+            .content {
+                margin-left: 0;
+                padding: 20px;
+                
+            }
+
+            .toggle-button {
+                font-size: 16px;
+                padding: 10px 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Toggle Button -->
+    <button class="toggle-button" onclick="toggleSidebar()" aria-label="Toggle Menu">☰ Menu</button>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <ul>
+            <li><a href="/Product">Home</a></li>
+            <li><a href="/complaint_List">Complaint</a></li>
+            <!-- <li><a href="/Notification">Requests</a></li> -->
+            <li><a href="/Cart">Cart</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content" id="content">
+        <div class="heading">
+            <h1>Notifications</h1>
+            <!-- <button class="export-button">Export Data</button> -->
+        </div>
+
+        <!-- Complaint Cards -->
+        {% for i in form %}
+        <div class="complaint-card">
+            <h3>Date: {{ i.date }}</h3>
+            <p>Notification: {{ i.notification }}</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const content = document.getElementById('content');
+
+            if (sidebar.style.left === '0px') {
+                sidebar.style.left = '-260px'; // Hide sidebar
+                content.classList.add('collapsed');
+            } else {
+                sidebar.style.left = '0px'; // Show sidebar
+                content.classList.remove('collapsed');
+            }
+        }
+    </script>
+
+</body>
+
+</html>

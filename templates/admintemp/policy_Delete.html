@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Delete Confirmation</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #ff7e5f, #feb47b); /* Gradient background */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+        }
+
+        /* Form Container */
+        .form-container {
+            background-color: rgba(255, 255, 255, 0.95); /* Light background for the form */
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+            width: 100%;
+            max-width: 350px;
+            text-align: center;
+        }
+
+        /* Heading */
+        h1 {
+            color: #e74c3c; /* Warning red for heading */
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        p {
+            font-size: 1.2em;
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        /* Submit Button */
+        input[type="submit"] {
+            background-color: #e74c3c; /* Red for delete action */
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #c0392b; /* Darker red on hover */
+            transform: scale(1.05);
+        }
+
+        /* Back Button */
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            background-color: #3498db; /* Blue for back action */
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 1em;
+            font-weight: bold;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        .back-link:hover {
+            background-color: #2980b9; /* Darker blue on hover */
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <form action="/policydelete/{{ x.id }}" method="post">
+            {% csrf_token %}
+            <h1>Are you sure?</h1>
+            <p>Policy: <strong>{{ x.policy }}</strong></p>
+            <input type="submit" value="Delete">
+        </form>
+        <a href="/Policy_List/" class="back-link">Back</a>
+    </div>
+</body>
+</html>

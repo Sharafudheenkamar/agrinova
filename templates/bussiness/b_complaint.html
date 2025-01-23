@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Complaint</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .sidebar {
+            background-color: rgba(13, 3, 54, 0.9);
+            font-size: 18px;
+            width: 250px;
+            height: 100vh;
+            position: fixed;  
+            left: -260px;
+            transition: left 0.3s ease;
+            padding-top: 58px;
+            z-index: 100; /* Lower z-index than the button */
+        }
+
+        .sidebar ul {
+            padding: 0;
+            margin: 0;
+            list-style-type: none;
+        }
+
+        .sidebar li {
+            padding: 15px;
+            transition: background-color 0.3s;
+        }
+
+        .sidebar a {
+            text-decoration: none;
+            color: white;
+            display: block;
+        }
+
+        .sidebar li:hover {
+            color: #0d3354;
+            background-color: #31ee41;
+        }
+
+        .toggle-button {
+            background-color: rgba(13, 3, 54, 0.9);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 20px;
+            border-radius: 5px;
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 101; 
+        }
+        .toggle-button:hover {
+            background-color: #31ee41;
+        }
+
+        .container {
+            margin: 0 auto;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .complaint-box {
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: all 0.2s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+            outline: none;
+        }
+
+        input[type="file"] {
+            padding: 5px;
+        }
+
+        button[type="submit"] {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #07f843;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+                left: -220px;
+            }
+
+            .complaint-box {
+                padding: 20px;
+            }
+
+            .toggle-button {
+                font-size: 18px;
+                padding: 8px 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <button class="toggle-button" onclick="toggleSidebar()" aria-label="Toggle Menu">☰</button>
+
+    <div class="sidebar" id="sidebar">
+        <ul>
+            <li><a href="/Product">Home</a></li>
+            <li><a href="/complaint_List">Complaint list</a></li>
+            <li><a href="/Notification">Notifications</a></li>
+            <li><a href="/Cart">Cart</a></li>
+            <!-- <li><a href="#">#</a></li>
+            <li><a href="#">#</a></li> -->
+        </ul>
+    </div>
+
+    <div class="container">
+        <div class="complaint-box">
+            <h2>Register Your Complaint</h2>
+            <form id="complaintForm" action="#" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div>
+                    <label for="name">Your Name</label>
+                    <input type="text" id="name" name="name" placeholder="Enter your name" required>
+                </div>
+                <div>
+                    <label for="email">Your Email</label>
+                    <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                </div>
+                <div>
+                    <label for="Category">Complaint Category</label>
+                    <select id="Category" name="Category" required>
+                        <option value="" selected disabled>Select a category</option>
+                        <option value="Service">Service Issue</option>
+                        <option value="Product">Product Issue</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="Details">Complaint Details</label>
+                    <textarea id="Details" name="Details" rows="5" placeholder="Describe your issue" required></textarea>
+                </div>
+                <div>
+                    <label for="docfile">Supporting Documents (Optional)</label>
+                    <input type="file" id="docfile" name="docfile" accept="image/*,application/pdf">
+                </div>
+                <button type="submit">Submit Complaint</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar.style.left === '0px') {
+                sidebar.style.left = '-260px'; // Hide the sidebar
+            } else {
+                sidebar.style.left = '0px'; // Show the sidebar
+            }
+        }
+
+        // Email Validation
+        document.getElementById("complaintForm").addEventListener("submit", function (event) {
+            const email = document.getElementById("email");
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            if (!emailRegex.test(email.value)) {
+                event.preventDefault();
+                alert("Please enter a valid email address.");
+                email.focus();
+            }
+        });
+    </script>
+
+</body>
+
+</html>

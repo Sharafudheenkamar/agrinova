@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reply to Complaint/Feedback</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f2f4f7;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 70%;
+            margin: 30px auto;
+            padding: 30px;
+            background-color: #ffffff;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            font-size: 16px;
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+
+        .form-group textarea {
+            height: 150px;
+            resize: vertical;
+        }
+
+        .submit-btn,
+        .cancel-btn {
+            padding: 12px 20px;
+            font-size: 16px;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn {
+            background-color: #4CAF50;
+        }
+
+        .submit-btn:hover {
+            background-color: #45a049;
+        }
+
+        .cancel-btn {
+            background-color: #f44336;
+            margin-left: 10px;
+        }
+
+        .cancel-btn:hover {
+            background-color: #e53935;
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .back-link a {
+            color: #007bff;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+
+        .feedback-message {
+            background-color: #f7f7f7;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-style: italic;
+            color: #666;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 14px;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Reply to Feedback</h2>
+
+        <form  method="POST" id="feedbackform">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="feedbackType">Feedback:</label>
+                <div class="feedback-message" id="feedbackType">
+                    <p>{{ c.feedback }}</p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="replyMessage">Your Reply:</label>
+                <textarea id="replyMessage" name="replyMessage" required placeholder="Write your reply here..."></textarea>
+            </div>
+
+            <!-- <div class="form-group">
+                <label for="resolutionStatus">Resolution Status:</label>
+                <select id="resolutionStatus" name="resolutionStatus" required>
+                    <option value="" disabled selected>Select resolution status...</option>
+                    <option value="resolved">Resolved</option>
+                    <option value="in-progress">In Progress</option>
+                    <option value="unresolved">Unresolved</option>
+                </select>
+            </div> -->
+
+            <div class="form-group" style="display: flex; justify-content: center;">
+                <button type="submit" class="submit-btn" onclick="window.location.href='/Feedback'">Submit Reply</button>
+                <button type="button" class="cancel-btn" onclick="window.location.href='/Feedback'">Cancel</button>
+            </div>
+        </form>
+
+        <div class="back-link">
+            <p><a href="/Feedback">Back to Feedback</a></p>
+        </div>
+
+        <div class="footer">
+            <p>&copy; 2025 Agrinova. All rights reserved.</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('feedbackForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // Prevent form from submitting immediately
+            const replyMessage = document.getElementById('replyMessage').value.trim();
+
+            if (!replyMessage) {
+                alert('Reply message cannot be empty.');
+                return;
+            }
+
+            // Alert message before submitting
+            alert('Your reply has been submitted successfully!');
+
+            // Submit the form after the alert
+            this.submit();
+        });
+    </script>
+
+</body>
+</html>

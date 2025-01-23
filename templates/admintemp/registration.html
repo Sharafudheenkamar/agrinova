@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agrinova Registration</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f9f9f9;
+    }
+    .form-container {
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      width: 100%;
+      max-width: 500px;
+    }
+    .form-group {
+      margin-bottom: 15px;
+      position: relative;
+    }
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    .dynamic-fields {
+      display: none;
+    }
+    .error-message {
+      color: red;
+      font-size: 0.9em;
+    }
+    .password-toggle {
+      position: absolute;
+      top: 35px;
+      right: 10px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2>Agrinova Registration Form</h2>
+    <form id="registrationForm" method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="userType">I am a:</label>
+        <select id="userType" name="userType" required>
+          <option value="">Select</option>
+          <option value="business">Merchant</option>
+          <option value="farmer">Farmer</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="fullName">Full Name:</label>
+        <input type="text" id="fullName" name="fullName" placeholder="Enter your full name" required>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email Address:</label>
+        <input type="email" id="email" name="email" placeholder="Enter your email" required>
+        <span class="error-message" id="emailError"></span>
+      </div>
+
+      <div class="form-group">
+        <label for="phone">Phone Number:</label>
+        <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" required>
+        <span class="error-message" id="phoneError"></span>
+      </div>
+      <div class="form-group">
+        <label for="address"> Address:</label>
+        <input type="tel" id="address" name="address" placeholder="Enter your Address:" required>
+      </div>
+      <div class="form-group">
+        <label for="place"> Place:</label>
+        <input type="tel" id="place" name="place" placeholder="Enter your state and district:" required>
+      </div>
+
+      <!-- Password Fields -->
+      <div class="form-group">
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" placeholder="Enter your password" required>
+        <span class="password-toggle" onclick="togglePasswordVisibility('password', this)">👁️</span>
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password:</label>
+        <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password" required>
+        <span class="password-toggle" onclick="togglePasswordVisibility('confirmPassword', this)">👁️</span>
+        <span class="error-message" id="passwordError"></span>
+      </div>
+
+      <!-- Merchant-specific fields -->
+      <div class="dynamic-fields" id="businessFields">
+        <div class="form-group">
+          <label for="businessName">Business Name:</label>
+          <input type="text" id="businessName" name="businessName" placeholder="Enter your business name">
+        </div>
+        <div class="form-group">
+          <label for="businessType">Business Type:</label>
+          <input type="text" id="businessType" name="businessType" placeholder="Enter your business type">
+        </div>
+      </div>
+
+      <!-- Farmer-specific fields -->
+      <div class="dynamic-fields" id="farmerFields">
+        <div class="form-group">
+          <label for="K_bhavan_id">K-Bhavan ID:</label>
+          <input type="text" id="kBhavanId" name="kBhavanId" placeholder="Enter your K-Bhavan ID">
+        </div>
+        <div class="form-group">
+          <label for="farmLocation">Farm Location:</label>
+          <input type="text" id="farmLocation" name="farmLocation" placeholder="Enter your farm location">
+        </div>
+        <!-- <div class="form-group">
+          <label for="cropType">Crops Grown:</label>
+          <textarea id="cropType" name="cropType" placeholder="List the crops you grow"></textarea>
+        </div> -->
+      </div>
+
+      <button type="submit">Register</button>
+    </form>
+  </div>
+
+  <script>
+    // Toggle Dynamic Fields
+    document.getElementById('userType').addEventListener('change', function () {
+      const userType = this.value;
+      const merchantFields = document.getElementById('businessFields');
+      const farmerFields = document.getElementById('farmerFields');
+
+      // Hide all dynamic fields initially
+      merchantFields.style.display = 'none';
+      farmerFields.style.display = 'none';
+
+      // Show the appropriate fields based on user type
+      if (userType === 'business') {
+        merchantFields.style.display = 'block';
+      } else if (userType === 'farmer') {
+        farmerFields.style.display = 'block';
+      }
+    });
+
+    // Toggle Password Visibility
+    function togglePasswordVisibility(inputId, toggleIcon) {
+      const inputField = document.getElementById(inputId);
+      if (inputField.type === "password") {
+        inputField.type = "text";
+        toggleIcon.textContent = "🙈"; // Change to "Hide"
+      } else {
+        inputField.type = "password";
+        toggleIcon.textContent = "👁️"; // Change to "Show"
+      }
+    }
+
+    // Form Validation
+    document.getElementById('registrationForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const email = document.getElementById('email').value;
+      const phone = document.getElementById('phone').value;
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+
+      const emailError = document.getElementById('emailError');
+      const phoneError = document.getElementById('phoneError');
+      const passwordError = document.getElementById('passwordError');
+
+      let isValid = true;
+
+      // Reset error messages
+      emailError.textContent = '';
+      phoneError.textContent = '';
+      passwordError.textContent = '';
+
+      // Validate email
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailPattern.test(email)) {
+        emailError.textContent = 'Please enter a valid email address.';
+        isValid = false;
+      }
+
+      // Validate phone number
+      const phonePattern = /^\d{10,}$/; // At least 10 digits
+      if (!phonePattern.test(phone)) {
+        phoneError.textContent = 'Please enter a valid phone number (at least 10 digits).';
+        isValid = false;
+      }
+
+      // Validate password
+      if (password.length < 8) {
+        passwordError.textContent = 'Password must be at least 8 characters long.';
+        isValid = false;
+      } else if (password !== confirmPassword) {
+        passwordError.textContent = 'Passwords do not match.';
+        isValid = false;
+      }
+
+      if (isValid) {
+        alert('Registration successful!');
+        this.submit(); // Submit the form
+      }
+    });
+  </script>
+</body>
+</html>

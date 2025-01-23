@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agricultural Admin Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('https://plus.unsplash.com/premium_photo-1661962692059-55d5a4319814?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+            background-size: cover;
+            background-repeat: no-repeat;
+            /* background-position: center; */
+            color: white;
+            padding: 20px;
+        }
+
+        .container {
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .sidebar {
+            background-color: rgba(13, 3, 54, 0.8);
+            font-size: 22px;
+            width: 250px;
+            height: 100vh;
+            position: fixed;
+            left: -260px;
+            transition: left 0.3s ease;
+            padding-top: 20px;
+            z-index: 1000;
+        }
+
+        .sidebar ul {
+            padding: 0;
+            margin: 0;
+            list-style-type: none;
+        }
+
+        .sidebar li {
+            padding: 15px;
+            transition: background-color 0.3s;
+        }
+
+        .sidebar a {
+            text-decoration: none;
+            color: white;
+            display: block;
+        }
+
+        .sidebar li:hover {
+            color: rgb(255, 102, 0);
+            background-color: rgb(102, 222, 106);
+        }
+
+        .main-content {
+            padding: 20px;
+            background-color: rgba(11, 105, 26, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            margin-left: 20px; /* Added margin to give space between button and content */
+            flex-grow: 1; /* Ensures the content takes available space */
+            text-align: center;
+        }
+
+        .toggle-button {
+            background-color: rgba(13, 3, 54, 0.8);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 20px;
+            border-radius: 5px;
+            margin-right: 20px;
+            z-index: 1000; /* Ensures it stays above content */
+        }
+        .log-button {
+            background-color: rgba(13, 3, 54, 0.8);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 20px;
+            border-radius: 5px;
+            margin-right: 20px;
+            margin-left: 20px;
+            z-index: 1000; /* Ensures it stays above content */
+        }
+
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+                left: -220px;
+            }
+
+            .main-content {
+                padding: 15px;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .sidebar {
+                width: 180px;
+                left: -200px;
+            }
+
+            .main-content {
+                margin-left: 200px;
+                padding: 10px;
+            }
+
+            .toggle-button {
+                font-size: 18px;
+                padding: 8px 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <button class="toggle-button" onclick="toggleSidebar()" aria-label="Toggle Menu">☰ Menu</button>
+
+        <div class="main-content">
+            <h1>Welcome to the Agricultural Admin Dashboard</h1>
+            <p>Here you can manage all aspects of your agricultural operations efficiently.</p>
+            <!-- Additional content goes here -->
+        </div>
+        <a href="/login" class="Logout"><button class="log-button"  aria-label="Toggle Menu">Logout</button></a>
+    </div>
+
+    <div class="sidebar" id="sidebar">
+        <ul>
+            <li><a href="/Home">Home</a></li>
+            <li><a href="/Policy_List">Policies</a></li>
+            <li><a href="/Approval">Requests</a></li>
+            <li><a href="/Complaint">Complaints</a></li>
+            <li><a href="/Labour">Labour Reports</a></li>
+            <li><a href="/Feedback">Feedbacks</a></li>
+        </ul>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar.style.left === '0px') {
+                sidebar.style.left = '-260px'; // Hide the sidebar
+            } else {
+                sidebar.style.left = '0px'; // Show the sidebar
+            }
+        }
+
+        // Close the sidebar when clicking outside of it
+        document.addEventListener('click', function (event) {
+            const sidebar = document.getElementById('sidebar');
+            const button = document.querySelector('.toggle-button');
+
+            if (!sidebar.contains(event.target) && !button.contains(event.target)) {
+                sidebar.style.left = '-260px'; // Hide the sidebar
+            }
+        });
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Feedback Page</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+        }
+        .main {
+            flex: 1;
+            padding: 20px;
+        }
+        .feedback-card {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            position: relative;
+            transition: box-shadow 0.3s ease;
+        }
+        .feedback-card:hover {
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .reply-btn {
+            background-color: rgb(145, 195, 105);
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            position: absolute;
+            right: 15px;
+            top: 15px;
+        }
+        .reply-btn:hover {
+            background-color: #3b8739;
+        }
+        .search-bar {
+            margin-bottom: 20px;
+        }
+        .search-bar input {
+            padding: 10px;
+            width: 100%;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        nav {
+            background-color: #0D0336;
+            padding: 10px;
+            text-align: center;
+        }
+        nav a {
+            color: #fff;
+            padding: 12px 20px;
+            text-decoration: none;
+            margin: 0 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        nav a:hover {
+            background-color: rgb(145, 195, 105);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .active {
+            background-color: #4caf50;
+        }
+        .no-results {
+            text-align: center;
+            font-size: 18px;
+            color: #888;
+            margin-top: 20px;
+        }
+        @media (max-width: 600px) {
+            nav {
+                flex-direction: column;
+            }
+            .feedback-card {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main">
+        <nav>
+            <a href="/Home" class="{% if active_page == 'Home' %}active{% endif %}">Home</a>
+            <a href="/Policy_List" class="{% if active_page == 'Policy_List' %}active{% endif %}">Policies</a>
+            <a href="/Approval" class="{% if active_page == 'Approval' %}active{% endif %}">Requests</a>
+            <a href="/Complaint" class="{% if active_page == 'Complaint' %}active{% endif %}">Complaints</a>
+            <a href="/Labour" class="{% if active_page == 'Labour' %}active{% endif %}">Labour Reports</a>
+        </nav>
+
+        <h1>Feedback Overview</h1>
+
+        <div class="search-bar">
+            <input type="text" placeholder="Search feedback..." id="search-input" />
+        </div>
+
+        {% if c %}
+            {% for i in c %}
+            <div class="feedback-card">
+                <p>{{ i.loginid.username }}</p>
+                <p>{{ i.feedback }}</p>
+                <a href="{% url 'Feedbackreply' i.id %}">
+                    <button class="reply-btn" aria-label="Reply to feedback">Reply</button>
+                </a>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p class="no-results">No feedback available.</p>
+        {% endif %}
+    </div>
+
+    <script>
+        // Search Bar Functionality
+        const searchInput = document.querySelector('#search-input');
+        const feedbackCards = document.querySelectorAll('.feedback-card');
+        const noResultsMessage = document.createElement('p');
+        noResultsMessage.classList.add('no-results');
+        noResultsMessage.textContent = 'No results found.';
+        let noResultsShown = false;
+
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            let hasResults = false;
+
+            feedbackCards.forEach(card => {
+                const text = card.textContent.toLowerCase();
+                const isVisible = text.includes(query);
+                card.style.display = isVisible ? 'block' : 'none';
+                if (isVisible) hasResults = true;
+            });
+
+            if (!hasResults && !noResultsShown) {
+                document.querySelector('.main').appendChild(noResultsMessage);
+                noResultsShown = true;
+            } else if (hasResults && noResultsShown) {
+                noResultsMessage.remove();
+                noResultsShown = false;
+            }
+        });
+    </script>
+</body>
+</html>

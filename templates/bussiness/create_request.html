@@ -1,0 +1,18 @@
+<!-- templates/create_request.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Request</title>
+</head>
+<body>
+    <h1>Create New Request</h1>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Create Request</button>
+    </form>
+    
+    <!-- <a href="{% url 'request_list' %}">Back to Request List</a> -->
+</body>
+</html>

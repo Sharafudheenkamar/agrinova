@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Policy Table</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2); /* Soft gradient */
+            color: #2c3e50;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        h2 {
+            font-size: 32px;
+            margin-bottom: 20px;
+            color: #34495e;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .nav-buttons a {
+            text-decoration: none;
+            background: linear-gradient(135deg, #74c69d, #57a773);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background 0.3s, transform 0.2s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-buttons a:hover {
+            background: linear-gradient(135deg, #57a773, #3d8b62);
+            transform: translateY(-2px);
+        }
+
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 100%;
+            max-width: 350px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .card-header {
+            font-size: 20px;
+            font-weight: bold;
+            color: #34495e;
+        }
+
+        .card-details {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .card-details div {
+            font-size: 16px;
+            color: #2c3e50;
+        }
+
+        .card-details span {
+            font-weight: bold;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .actions a {
+            text-decoration: none;
+            padding: 8px 15px;
+            font-size: 14px;
+            border-radius: 20px;
+            text-align: center;
+            flex: 1;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        .actions a.update {
+            background: #74b9ff;
+            color: white;
+        }
+
+        .actions a.update:hover {
+            background: #4a90e2;
+            transform: scale(1.05);
+        }
+
+        .actions a.delete {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .actions a.delete:hover {
+            background: #e74c3c;
+            transform: scale(1.05);
+        }
+
+        @media screen and (max-width: 768px) {
+            .nav-buttons a {
+                font-size: 14px;
+                padding: 10px 15px;
+            }
+
+            .card {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Policy Management</h2>
+
+    <!-- Navigation Buttons -->
+    <div class="nav-buttons">
+        <a href="/Home/">Back Home</a>
+        <a href="/Policy/">Add Policy</a>
+    </div>
+
+    
+    <!-- Card Layout for Policies -->
+    
+    <div class="card-container">
+        {% for i in form %}
+        <div class="card">
+            <div class="card-header">Policy #{{ forloop.counter }}</div>
+            <div class="card-details">
+                <div><span>Policy:</span> {{ i.PolicyTitle }}</div>
+                <div><span>Date:</span> {{ i.date }}</div>
+                <div><span>Category:</span> {{ i.Category }}</div>
+                <div><span>Details:</span> {{ i.Details }}</div>
+                <div>
+                    <span>File:</span>
+                    {% if i.policyfile %}
+                      <a href="{{ i.policyfile.url }}" target="_blank">View</a>
+                    {% else %}
+                      <span>No file available</span>
+                    {% endif %}
+                  </div>            </div>
+            <div class="actions">
+                <a href="/policy_Edit/{{ i.id }}" class="update">Update</a>
+                <a href="/policy_Delete/{{ i.id }}" class="delete">Delete</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+
+</body>
+</html>

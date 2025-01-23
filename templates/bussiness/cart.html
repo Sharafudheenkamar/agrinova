@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart</title>
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: rgb(55, 72, 41);
+            margin-bottom: 20px;
+        }
+
+        /* Navigation Bar */
+        nav {
+            background-color: rgb(75, 213, 84);
+            padding: 10px 20px;
+            text-align: center;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        nav ul {
+            list-style-type: none;
+            display: flex;
+            justify-content: center;
+        }
+
+        nav ul li {
+            margin: 0 15px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+        nav ul li a:hover {
+            color: rgb(55, 150, 55);
+        }
+
+        /* Search Bar */
+        .search-bar {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .search-bar input {
+            padding: 10px;
+            width: 60%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        /* Cart Items */
+        .cart-items {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .cart-item img {
+            width: 50px;
+            height: 50px;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        .cart-item-info {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+        }
+
+        .cart-item h3 {
+            margin: 0 10px;
+        }
+
+        .cart-item input[type="checkbox"] {
+            margin-right: 15px;
+        }
+
+        /* Checkout Button */
+        .checkout {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: rgb(75, 213, 84);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .checkout:hover {
+            background-color: rgb(55, 150, 55);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .search-bar input {
+                width: 80%;
+            }
+
+            nav ul {
+                flex-direction: column;
+                padding: 0;
+            }
+
+            nav ul li {
+                margin: 10px 0;
+            }
+
+            .cart-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .cart-item-info {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .search-bar input {
+                width: 90%;
+            }
+
+            .cart-item h3 {
+                font-size: 14px;
+            }
+
+            .checkout {
+                padding: 8px 16px;
+            }
+        }
+    </style>
+    <script>
+        function filterItems() {
+            const filter = document.getElementById('search').value.toLowerCase();
+            const items = document.querySelectorAll('.cart-item');
+
+            items.forEach(item => {
+                const name = item.querySelector('h3').textContent.toLowerCase();
+                if (name.includes(filter)) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav>
+        <ul>
+            <li><a href="/Product">Home</a></li>
+            <li><a href="/Bcomplaint">Complaint</a></li>
+            <li><a href="/Request_list">Request</a></li>
+            <li><a href="/login">Logout</a></li>
+        </ul>
+    </nav>
+
+    <h1>Your Cart</h1>
+
+    <!-- Search Bar -->
+    <div class="search-bar">
+        <input 
+            type="text" 
+            id="search" 
+            placeholder="Search items by name..." 
+            onkeyup="filterItems()"
+        >
+    </div>
+
+    <ul class="cart-items">
+        {% for i in form %}
+        <li class="cart-item">
+            <input type="checkbox">
+            <div class="cart-item-info">
+                <img src="{{ i.productid.image.url }}" alt="Item Image">
+                <h3>{{ i.productid.name }}</h3>
+            </div>
+            <h3>Price: {{ i.productid.price }}</h3>
+            <h3>Quantity: {{ i.quantity }}</h3>
+            <form method="post" action="{% url 'delete_cart_item' i.id %}" style="margin-left: 10px;">
+                {% csrf_token %}
+                <button type="submit" style="background: #ff4d4d; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;">
+                    Delete
+                </button>
+            </form>
+        </li>
+        {% endfor %}
+    </ul>
+    
+    <!-- <button class="checkout">Proceed to Checkout</button> -->
+
+</body>
+</html>

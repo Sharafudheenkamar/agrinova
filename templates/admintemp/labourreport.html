@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Labor Report</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+        }
+        .navbar {
+            background-color: #0D0336;;
+            padding: 10px;
+            text-align: center;
+        }
+        .navbar a {
+            color: #fff;
+            padding: 12px 20px;
+            text-decoration: none;
+            margin: 0 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            
+        }
+        .navbar a:hover {
+            text-decoration: underline;
+            background-color: rgb(145, 195, 105);
+        }
+        .toggle-btn {
+            position: absolute;
+            top: 45px;
+            left: 20px;
+            padding-bottom: 5px;
+            background-color: transparent;
+            color: rgb(0, 255, 13);
+            border: none;
+            font-size: 30px;
+            cursor: pointer;
+            z-index: 10;
+        }
+        .sidebar {
+            background-color: rgb(13, 3, 54);
+            color: white;
+            width: 10%;
+            height: 100vh;
+            padding-top: 79px;
+            position: fixed;
+            transition: left 0.3s ease;
+        
+        }
+        .sidebar.hidden {
+            transform: translateX(-100%);
+        }
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .sidebar li {
+            padding: 15px;
+        }
+        .sidebar a {
+            text-decoration: none;
+            color: white;
+            display: block;
+        }
+        .sidebar li:hover {
+            background-color: rgb(145, 195, 105);
+            color: rgb(255, 162, 0);
+        }
+        .main {
+            margin-left: 20%;
+            width: 80%;
+            padding: 20px;
+            transition: margin-left 0.3s ease-in-out;
+        }
+        .main.full-width {
+            margin-left: 0;
+            width: 100%;
+        }
+        .content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .heading h1 {
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: rgb(13, 3, 54);
+        }
+        .filter-options {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .filter-options input[type="date"], .filter-options input[type="text"], .filter-options select, .filter-options button {
+            padding: 10px;
+            font-size: 16px;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+        .filter-options button {
+            background-color: rgb(13, 3, 54);
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: rgb(13, 3, 54);
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #e0e0e0;
+        }
+        .footer {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: rgb(13, 3, 54);
+            color: white;
+            text-align: center;
+        }
+        canvas {
+            max-width: 600px;
+            margin: 20px auto;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar Section -->
+    <div class="navbar">
+        <div class="nav-links">
+            <a href="/Home">Home</a>
+            <a href="/Policy_List">Policy</a>
+            <a href="/Complaint">Complaints</a>
+            <a href="/Approval">Approvals</a>
+            <a href="/Feedback">Feedback</a>
+        </div>
+    </div>
+
+    <!-- Toggle Button -->
+    <button class="toggle-btn" id="toggleSidebar">☰</button>
+
+    <!-- Sidebar Section -->
+    <div class="sidebar" id="sidebar">
+        <ul>
+            {% for i in form %}
+                <li><a href="#">{{ i.loginid.username }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Main Content Section -->
+    <div class="main" id="mainContent">
+        <div class="content">
+            <div class="heading">
+                <h1>Labor Report Summary</h1>
+            </div>
+
+            <!-- Filter and Search Options -->
+            <div class="filter-options">
+                <input type="text" id="searchBar" placeholder="Search by Farmer ID or Name">
+                <select id="statusFilter">
+                    <option value="all">All Status</option>
+                    <option value="completed">Completed</option>
+                    <option value="in-progress">In Progress</option>
+                </select>
+                <input type="date" id="startDate" placeholder="Start Date">
+                <input type="date" id="endDate" placeholder="End Date">
+                <button id="filterBtn">Filter</button>
+                <button id="exportBtn">Export CSV</button>
+            </div>
+
+            <!-- Labor Report Table -->
+            <table>
+                <thead>
+                    <tr>
+                        <th>Farmer ID</th>
+                        <th>Farmer Name</th>
+                        <th>Labour Hours</th>
+                        <th>Tasks Completed</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="reportData">
+                    {% for i in form %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ i.name }}</td>
+                            <td>{{ i.hour }}</td>
+                            <td>{{ i.task }}</td>
+                            <td>{{ i.date }}</td>
+                            <td>{{ i.status }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <!-- Placeholder for Graphical Data Visualization -->
+            <canvas id="laborHoursChart"></canvas>
+
+            <!-- Footer Section -->
+            <div class="footer">
+                <p>&copy; 2024 Admin Panel | Labor Report Summary</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sidebar Toggle Logic
+        const toggleBtn = document.getElementById('toggleSidebar');
+        const sidebar = document.getElementById('sidebar');
+        const mainContent = document.getElementById('mainContent');
+
+        toggleBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('hidden');
+            mainContent.classList.toggle('full-width');
+        });
+
+        // Filter Functionality
+        document.getElementById('filterBtn').addEventListener('click', () => {
+            const searchBar = document.getElementById('searchBar').value.toLowerCase();
+            const statusFilter = document.getElementById('statusFilter').value;
+            const startDate = new Date(document.getElementById('startDate').value);
+            const endDate = new Date(document.getElementById('endDate').value);
+
+            const rows = document.querySelectorAll('#reportData tr');
+
+            rows.forEach(row => {
+                const name = row.cells[1].textContent.toLowerCase();
+                const status = row.cells[5].textContent.toLowerCase();
+                const date = new Date(row.cells[4].textContent);
+
+                let isVisible = true;
+
+                // Filter by Name
+                if (searchBar && !name.includes(searchBar)) {
+                    isVisible = false;
+                }
+
+                // Filter by Status
+                if (statusFilter !== 'all' && status !== statusFilter) {
+                    isVisible = false;
+                }
+
+                // Filter by Date Range
+                if (!isNaN(startDate.getTime()) && date < startDate) {
+                    isVisible = false;
+                }
+                if (!isNaN(endDate.getTime()) && date > endDate) {
+                    isVisible = false;
+                }
+
+                // Apply Visibility
+                row.style.display = isVisible ? '' : 'none';
+            });
+        });
+    </script>
+</body>
+</html>
