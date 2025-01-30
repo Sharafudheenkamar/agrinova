@@ -1,4 +1,4 @@
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import ModelSerializer,SerializerMethodField
 from .models import *
 
 
@@ -11,6 +11,17 @@ class Farmerserializer(ModelSerializer):
     class Meta:
         model = farmer
         fields=['name','address','place','mob_no','K_bhavan','farmLocation']
+class ProductsSerializer1(ModelSerializer):
+         # Add a SerializerMethodField to retrieve the category name
+     product_category = SerializerMethodField()
+     class Meta:
+        model=product
+            #  loginid=models.ForeignKey(Usertable,on_delete=models.CASCADE,null=True,blank=True)
+ 
+        fields=['loginid','name','image','price','Quantity','Details','product_category']
+     def get_product_category(self, obj):
+        # Safely return the category name or None if no category is assigned
+            return obj.category.category_name if obj.category else None
 class ProductsSerializer(ModelSerializer):
      class Meta:
         model=product

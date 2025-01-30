@@ -84,6 +84,7 @@ path('complaintsapi/', ComplaintAPIView.as_view(), name='complaints-api'),
 path('market-trends/', MarketTrendAPIView.as_view(), name='market-trend-api'),
 path('chatbotapi',chatbotapi.as_view(),name='chatbotapi'),
 path('CategoryAPIView',CategoryAPIView.as_view(),name='CategoryAPIView'),
+path('CropRecommendationAPIView',CropRecommendationAPIView.as_view(),name='CropRecommendationAPIView'),
 
     
 ]

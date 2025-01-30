@@ -2,7 +2,7 @@ from django.shortcuts import render,redirect,get_object_or_404
 from django.views import View
 from django.http import Http404, HttpResponse,JsonResponse,HttpResponseBadRequest
 
-from .serializer import ComplaintSerializer, ComplaintSerializer1, Farmerserializer, LabourSerializer, NotificationsSerializer, ProductsSerializer, RequestsSerializer, UsertableSerializer
+from .serializer import ComplaintSerializer, ComplaintSerializer1, Farmerserializer, LabourSerializer, NotificationsSerializer, ProductsSerializer, ProductsSerializer1, RequestsSerializer, UsertableSerializer
 from .form import *
 from .models import *
 from django.contrib import messages
@@ -402,7 +402,7 @@ class Viewprofile(APIView):
 class ViewProducts(APIView):
     def get(self, request,id):
         Products = product.objects.filter(loginid__id=id).all()
-        Products_serializer = ProductsSerializer(Products, many=True)
+        Products_serializer = ProductsSerializer1(Products, many=True)
         # print("-----> Offer images:", Products_serializer.data)
         return Response(Products_serializer.data)
     def post(self, request, id):
@@ -427,9 +427,9 @@ class ViewNotifications(APIView):
     
 class ViewRequests(APIView):
     def get(self, request,id):
-        Requests = requesttable.objects.filter(productid__loginid__id=id).all()
+        Requests = requesttable.objects.filter(loginid__id=id).all()
         Requests_serializer = RequestsSerializer(Requests, many=True)
-        # print("-----> Offer images:", Products_serializer.data)
+        print("-----> Offer images:", Requests_serializer.data)
         return Response(Requests_serializer.data)
     
     def put(self, request, id):
@@ -578,6 +578,35 @@ class CategoryAPIView(APIView):
         category_list = list(categories)
         
         return Response(category_list, status=status.HTTP_200_OK)
+    
+from rest_framework import status
+import pandas as pd
+import joblib
+
+model_path = "crop_recommendation_model.joblib"
+clf = joblib.load(model_path)
+print("Model loaded successfully.")
+
+class CropRecommendationAPIView(APIView):
+    def post(self, request):
+        try:
+            data = request.data
+            n = float(data.get("N"))
+            p = float(data.get("P"))
+            k = float(data.get("K"))
+            temperature = float(data.get("temperature"))
+            humidity = float(data.get("humidity"))
+            ph = float(data.get("ph"))
+            rainfall = float(data.get("rainfall"))
+
+            input_data = pd.DataFrame({'N': [n], 'P': [p], 'K': [k],
+                                       'temperature': [temperature], 'humidity': [humidity],
+                                       'ph': [ph], 'rainfall': [rainfall]})
+            prediction = clf.predict(input_data)
+            return Response({'recommended_crop': prediction[0]}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
 import google.generativeai as genai
 
 from rest_framework.views import APIView
