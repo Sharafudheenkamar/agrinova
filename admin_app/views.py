@@ -556,13 +556,37 @@ class MarketTrendAPIView(APIView):
             )
 
             # Add data to the response list
-            trend_data.append({
-                "productcategory": category_id,
-                "productcategoryname": category_name,
-                "last_week_price": last_week_price,
-                "this_week_price": this_week_price,
-                "demand": total_demand
-            })
+        #     trend_data.append({
+        #         "productcategory": category_id,
+        #         "productcategoryname": category_name,
+        #         "last_week_price": last_week_price,
+        #         "this_week_price": this_week_price,
+        #         "demand": total_demand
+        #     })
+
+        
+    
+        # trends = MarketTrend.objects.all().values(
+        #     "category__category_name", "last_week_price", "this_week_price", "demand", "updated_at"
+        # )
+
+        # return Response(list(trends), status=status.HTTP_200_OK)
+
+        # return Response(trend_data, status=status.HTTP_200_OK)
+        trends = MarketTrend.objects.all().values(
+    "category_id", "category__category_name", "last_week_price", "this_week_price", "demand"
+)
+
+        trend_data = [
+            {
+                "productcategory": trend["category_id"],
+                "productcategoryname": trend["category__category_name"],
+                "last_week_price": trend["last_week_price"],
+                "this_week_price": trend["this_week_price"],
+                "demand": trend["demand"]
+            }
+            for trend in trends
+        ]
 
         return Response(trend_data, status=status.HTTP_200_OK)
 class CategoryAPIView(APIView):

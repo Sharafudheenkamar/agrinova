@@ -48,6 +48,17 @@ class requesttable(models.Model):
      productid =models.ForeignKey(product,on_delete=models.CASCADE)
      status = models.CharField(max_length=100,null=True,blank=True)
 
+#admin_app/models.py
+class MarketTrend(models.Model):
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    last_week_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    this_week_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    demand = models.IntegerField(default=0)
+    updated_at = models.DateTimeField(auto_now=True)  # Timestamp of last update
+
+    def __str__(self):
+        return f"{self.category.category_name} - {self.updated_at}"
+
 class cart(models.Model):
     loginid = models.ForeignKey(Usertable, on_delete=models.CASCADE, null=True, blank=True)
     productid = models.ForeignKey(product, on_delete=models.CASCADE)
